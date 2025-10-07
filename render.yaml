@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: share-me-p2p
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=450
+    healthCheckPath: /
+    region: oregon
+    autoDeploy: true

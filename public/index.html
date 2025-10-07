@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Share Me</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="alternate icon" href="favicon.svg" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Back Button -->
+      <div class="back-button" id="back-btn" style="display: none">
+        <span>←</span>
+        <span>Back</span>
+      </div>
+
+      <!-- Initial Connection Screen -->
+      <div class="screen" id="connection-screen">
+        <div class="welcome-content">
+          <h1>Share Me</h1>
+          <p>Transfer files directly between devices - No limits, No servers</p>
+
+          <div class="input-section">
+            <input type="text" id="room-input" placeholder="Enter room code" />
+            <button id="join-room" class="primary-btn">Join Room</button>
+          </div>
+
+          <div class="divider">
+            <span>or</span>
+          </div>
+
+          <button id="generate-room" class="secondary-btn">
+            Create New Room
+          </button>
+        </div>
+      </div>
+
+      <!-- Room Screen -->
+      <div class="screen" id="room-screen" style="display: none">
+        <!-- Room Info -->
+        <div class="room-header">
+          <h2>Room: <span id="current-room" class="room-code"></span></h2>
+          <p>Share this code with other devices to connect</p>
+          <button id="copy-code" class="primary-btn">Copy Code</button>
+        </div>
+
+        <!-- Connected Devices -->
+        <div class="connected-section">
+          <div id="users-list"></div>
+        </div>
+
+        <!-- File Drop Zone -->
+        <div class="drop-zone-container">
+          <div class="file-drop-zone" id="file-drop-zone">
+            <div class="drop-icon">📁</div>
+            <p>Drop files/folders here or click to select</p>
+            <input type="file" id="file-input" multiple />
+            <input
+              type="file"
+              id="folder-input"
+              webkitdirectory
+              directory
+              multiple
+              mozdirectory
+              style="display: none"
+            />
+            <div class="file-buttons">
+              <button
+                class="primary-btn"
+                onclick="document.getElementById('file-input').click()"
+              >
+                Select Files
+              </button>
+              <button class="secondary-btn" id="folder-select-btn">
+                📂 Select Folder
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Receiving Files -->
+        <div
+          class="receiving-section"
+          id="receiving-section"
+          style="display: none"
+        >
+          <h3>Receiving:</h3>
+          <div id="received-files"></div>
+        </div>
+
+        <!-- Sending Files -->
+        <div class="sending-section" id="sending-section" style="display: none">
+          <h3>Sending:</h3>
+          <div id="file-list"></div>
+        </div>
+      </div>
+
+      <!-- Developer Credit -->
+      <div class="developer-credit">
+        <p>
+          Developed with ❤️ by <span class="developer-name">Raj Vankar</span>
+        </p>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app-fast.js"></script>
+  </body>
+</html>
