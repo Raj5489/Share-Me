@@ -540,7 +540,10 @@ input[type="text"]:focus {
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 4px;
-  word-break: break-word;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .file-size {

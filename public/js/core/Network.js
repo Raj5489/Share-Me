@@ -100,14 +100,7 @@ export class Network {
     this.socket.on("file-chunk", (data) => this.app.fileTransfer.handleFileChunk(data));
     this.socket.on("request-resume", (data) => this.app.fileTransfer.handleResumeRequest(data));
     this.socket.on("file-complete", (data) => {
-      const fileInfo = this.app.state.receivingFiles.get(data.fileId);
-      if (fileInfo) {
-        fileInfo.isComplete = true;
-        if (!fileInfo.totalChunks || fileInfo.receivedChunks >= fileInfo.totalChunks) {
-          if (fileInfo.stallTimer) clearTimeout(fileInfo.stallTimer);
-          this.app.fileTransfer.reconstructFile(data.fileId, fileInfo);
-        }
-      }
+      this.app.fileTransfer.handleFileComplete(data.fileId);
     });
 
     this.socket.on("pong-response", () => {
@@ -216,34 +209,21 @@ export class Network {
         this.app.state.dataChannels.set(userId, receiveChannel);
       };
 
-      receiveChannel.onmessage = (e) => {
-        // Direct WebRTC ArrayBuffer chunk! ⚡⚡⚡
-        // We wrap it to look like socket data so FileTransfer.js handles it
-        if (e.data instanceof ArrayBuffer) {
-          const chunkData = new Uint8Array(e.data);
-          
-          // Data channels don't guarantee ordering or metadata natively,
-          // so we prepend 36 bytes of metadata: [fileId (32 bytes)][chunkIndex (4 bytes)]
-          // Actually, our FileTransfer.js expects JSON over socket. 
-          // Let's pass the raw string if it's JSON, or binary if we structured it.
-          // For simplicity, we send JSON over data channel first.
-        } else if (typeof e.data === "string") {
-          const data = JSON.parse(e.data);
-          if (data.type === "file-chunk") {
-             this.app.fileTransfer.handleFileChunk(data);
-          } else if (data.type === "file-info") {
-             this.app.fileTransfer.handleFileInfo(data);
-          } else if (data.type === "request-resume") {
-             this.app.fileTransfer.handleResumeRequest(data);
-          } else if (data.type === "file-complete") {
-             const fileInfo = this.app.state.receivingFiles.get(data.fileId);
-             if (fileInfo) {
-               fileInfo.isComplete = true;
-               if (!fileInfo.totalChunks || fileInfo.receivedChunks >= fileInfo.totalChunks) {
-                 if (fileInfo.stallTimer) clearTimeout(fileInfo.stallTimer);
-                 this.app.fileTransfer.reconstructFile(data.fileId, fileInfo);
-               }
-             }
+      receiveChannel.onmessage = async (e) => {
+        if (typeof e.data === "string") {
+          try {
+            const data = JSON.parse(e.data);
+            if (data.type === "file-chunk") {
+               this.app.fileTransfer.handleFileChunk(data);
+            } else if (data.type === "file-info") {
+               this.app.fileTransfer.handleFileInfo(data);
+            } else if (data.type === "request-resume") {
+               this.app.fileTransfer.handleResumeRequest(data);
+            } else if (data.type === "file-complete") {
+               this.app.fileTransfer.handleFileComplete(data.fileId);
+            }
+          } catch (err) {
+            console.error("Failed to parse DataChannel JSON", err);
           }
         }
       };
