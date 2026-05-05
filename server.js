@@ -28,7 +28,14 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(express.static("public"));
+// Disable caching so browsers always load latest app-fast.js
+app.use(
+  express.static("public", {
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    },
+  })
+);
 
 // Store active rooms and users
 const rooms = new Map();
@@ -133,23 +140,23 @@ io.on("connection", (socket) => {
     });
   });
 
-  // WebRTC signaling
-  socket.on("offer", (data) => {
-    socket.to(data.target).emit("offer", {
+  // 🚀 WebRTC Signaling for True P2P
+  socket.on("webrtc-offer", (data) => {
+    socket.to(data.target).emit("webrtc-offer", {
       offer: data.offer,
       sender: socket.id,
     });
   });
 
-  socket.on("answer", (data) => {
-    socket.to(data.target).emit("answer", {
+  socket.on("webrtc-answer", (data) => {
+    socket.to(data.target).emit("webrtc-answer", {
       answer: data.answer,
       sender: socket.id,
     });
   });
 
-  socket.on("ice-candidate", (data) => {
-    socket.to(data.target).emit("ice-candidate", {
+  socket.on("webrtc-ice", (data) => {
+    socket.to(data.target).emit("webrtc-ice", {
       candidate: data.candidate,
       sender: socket.id,
     });
@@ -157,13 +164,20 @@ io.on("connection", (socket) => {
 
   // ⚡ LIGHTNING-FAST WebSocket File Transfer
   socket.on("file-info", (data) => {
-    // Skip rate limiting for file info - it's just metadata
-    // Broadcast file info to all users in the room except sender
     socket.to(data.room).emit("file-info", {
       fileId: data.fileId,
       fileName: data.fileName,
       fileSize: data.fileSize,
       mimeType: data.mimeType,
+      totalChunks: data.totalChunks,
+      sender: socket.id,
+    });
+  });
+
+  socket.on("request-resume", (data) => {
+    socket.to(data.room).emit("request-resume", {
+      fileId: data.fileId,
+      nextExpectedChunkIndex: data.nextExpectedChunkIndex,
       sender: socket.id,
     });
   });

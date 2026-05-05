@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Share Me</title>
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="alternate icon" href="favicon.svg" />
     <link rel="stylesheet" href="style.css" />
+    <!-- QR Code libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   </head>
   <body>
     <div class="mobile-container">
@@ -24,7 +30,16 @@
 
           <div class="input-section">
             <input type="text" id="room-input" placeholder="Enter room code" />
-            <button id="join-room" class="primary-btn">Join Room</button>
+            <div class="join-actions">
+              <button id="join-room" class="primary-btn">Join Room</button>
+              <button id="scan-qr-btn" class="secondary-btn icon-btn" title="Scan QR Code">📷</button>
+            </div>
+          </div>
+          
+          <!-- Scanner Container -->
+          <div id="reader-container" style="display: none;">
+            <div id="reader"></div>
+            <button id="close-scanner-btn" class="secondary-btn" style="margin-top: 10px;">Close Scanner</button>
           </div>
 
           <div class="divider">
@@ -41,9 +56,23 @@
       <div class="screen" id="room-screen" style="display: none">
         <!-- Room Info -->
         <div class="room-header">
-          <h2>Room: <span id="current-room" class="room-code"></span></h2>
+          <div class="room-header-top">
+            <h2>Room: <span id="current-room" class="room-code"></span></h2>
+            <div class="connection-quality">
+              <span class="quality-dot" id="quality-dot">●</span>
+              <span id="quality-text">--</span>
+            </div>
+          </div>
           <p>Share this code with other devices to connect</p>
-          <button id="copy-code" class="primary-btn">Copy Code</button>
+          <div class="room-actions">
+            <button id="copy-code" class="primary-btn">Copy Code</button>
+            <button id="toggle-qr-btn" class="secondary-btn">📷 QR Code</button>
+          </div>
+          <!-- QR Code panel (hidden by default) -->
+          <div class="qr-container" id="qr-container" style="display:none">
+            <div id="qr-code"></div>
+            <p class="qr-hint">📷 Scan to join this room</p>
+          </div>
         </div>
 
         <!-- Connected Devices -->
@@ -103,9 +132,10 @@
           Developed with ❤️ by <span class="developer-name">Raj Vankar</span>
         </p>
       </div>
-    </div>
-
+    <!-- Socket.IO -->
     <script src="/socket.io/socket.io.js"></script>
-    <script src="app-fast.js"></script>
+    
+    <!-- ES6 Component-Based App -->
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>

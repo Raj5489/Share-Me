@@ -205,6 +205,24 @@ input[type="text"]:focus {
 }
 
 /* ✨ DARK GLASS BUTTONS ✨ */
+.join-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.join-actions .primary-btn {
+  flex: 1;
+}
+
+.icon-btn {
+  width: auto !important;
+  padding: 16px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .primary-btn,
 .secondary-btn {
   width: 100%;
@@ -775,7 +793,193 @@ input[type="text"]:focus {
   background-clip: text;
 }
 
+/* ===== NEW FEATURES ===== */
+
+/* 🏠 Room Header Top Row */
+.room-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 🟢 Connection Quality Dot */
+.connection-quality {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.quality-dot {
+  font-size: 0.9rem;
+  transition: color 0.5s ease;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.quality-dot.excellent { color: #34d399; animation: none; opacity: 1; }
+.quality-dot.good      { color: #86efac; }
+.quality-dot.fair      { color: #fbbf24; }
+.quality-dot.poor      { color: #ef4444; }
+
+/* 📱 Room Action Buttons Row */
+.room-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.room-actions .primary-btn,
+.room-actions .secondary-btn {
+  flex: 1;
+  padding: 12px 12px;
+  font-size: 0.85rem;
+}
+
+/* 📷 QR Code Panel */
+.qr-container {
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.qr-container canvas,
+.qr-container img {
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px;
+  display: block;
+}
+
+.qr-hint {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+/* ✕ Remove File Button */
+.remove-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  width: auto;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.remove-btn:hover {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+  transform: scale(1.05);
+}
+
+/* File item action group (send + remove) */
+.file-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* 📤 Send All Button */
+.send-all-btn {
+  width: 100%;
+  padding: 14px 20px;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(6, 95, 70, 0.3);
+}
+
+.send-all-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #047857 0%, #059669 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(6, 95, 70, 0.45);
+}
+
+.send-all-btn:disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* 📷 QR Scanner Styles */
+#reader-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#reader {
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  width: 100%;
+}
+
+#reader video {
+  width: 100% !important;
+  border-radius: 10px;
+}
+
 /* Hidden file inputs */
 input[type="file"] {
   display: none;
 }
+
+.file-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
